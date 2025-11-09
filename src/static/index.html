@@ -5,68 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mergington High School Activities</title>
     <link rel="stylesheet" href="styles.css" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        background-color: #f5f5f5;
-      }
-      .activities-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        padding: 20px;
-      }
-      .activity-card {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      .activity-card h2 {
-        color: #2c3e50;
-        margin-top: 0;
-      }
-      .activity-card p {
-        color: #666;
-        margin: 10px 0;
-      }
-      .participants-section {
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid #eee;
-      }
-      .participants-section h3 {
-        color: #2c3e50;
-        font-size: 1rem;
-        margin-bottom: 10px;
-      }
-      .participants-list {
-        margin: 0;
-        padding-left: 20px;
-        color: #666;
-      }
-      .signup-form {
-        margin-top: 15px;
-      }
-      .signup-form input {
-        padding: 8px;
-        margin-right: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-      .signup-form button {
-        padding: 8px 16px;
-        background-color: #3498db;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .signup-form button:hover {
-        background-color: #2980b9;
-      }
-    </style>
   </head>
   <body>
     <header>
@@ -75,10 +13,9 @@
     </header>
 
     <main>
-      <section id="activities-container">
+      <section>
         <h3>Available Activities</h3>
         <div class="activities-grid" id="activities-container">
-          <!-- Activities will be loaded here -->
           <p>Loading activities...</p>
         </div>
       </section>
@@ -99,7 +36,6 @@
             <label for="activity">Select Activity:</label>
             <select id="activity" required>
               <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
             </select>
           </div>
           <button type="submit">Sign Up</button>
@@ -112,75 +48,7 @@
       <p>&copy; 2023 Mergington High School</p>
     </footer>
 
+    <!-- Single frontend entry-point: app.js handles rendering, signup and unregister -->
     <script src="app.js"></script>
-    <script>
-      async function loadActivities() {
-        const response = await fetch("/activities");
-        const activities = await response.json();
-
-        const container = document.getElementById("activities-container");
-
-        for (const [name, activity] of Object.entries(activities)) {
-          const card = document.createElement("div");
-          card.className = "activity-card";
-
-          card.innerHTML = `
-                    <h2>${name}</h2>
-                    <p><strong>Description:</strong> ${activity.description}</p>
-                    <p><strong>Schedule:</strong> ${activity.schedule}</p>
-                    <p><strong>Availability:</strong> ${activity.participants.length}/${activity.max_participants} spots filled</p>
-                    
-                    <div class="participants-section">
-                        <h3>Current Participants:</h3>
-                        <ul class="participants-list">
-                            ${activity.participants
-                              .map((email) => `<li>${email}</li>`)
-                              .join("")}
-                        </ul>
-                    </div>
-
-                    <div class="signup-form">
-                        <input type="email" placeholder="Your school email" id="email-${name}">
-                        <button onclick="signUp('${name}')">Sign Up</button>
-                    </div>
-                `;
-
-          container.appendChild(card);
-        }
-      }
-
-      async function signUp(activityName) {
-        const emailInput = document.getElementById(`email-${activityName}`);
-        const email = emailInput.value;
-
-        if (!email) {
-          alert("Please enter your email address");
-          return;
-        }
-
-        try {
-          const response = await fetch(
-            `/activities/${encodeURIComponent(activityName)}/signup?email=${encodeURIComponent(
-              email
-            )}`,
-            {
-              method: "POST",
-            }
-          );
-
-          if (response.ok) {
-            alert("Successfully signed up!");
-            location.reload();
-          } else {
-            const error = await response.json();
-            alert(error.detail);
-          }
-        } catch (error) {
-          alert("Error signing up for activity");
-        }
-      }
-
-      loadActivities();
-    </script>
   </body>
 </html>

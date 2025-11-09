@@ -171,3 +171,16 @@ footer {
 .participants-list li:last-child {
   border-bottom: none;
 }
+
+.unregister-btn {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 0.95em;
+}
+
+.unregister-btn:hover {
+  color: #b71c1c;
+}
